@@ -5,28 +5,33 @@
                 <div class="card">
                     <div class="card-header">Company Detail List</div>
                     <div class="card-body">
-                        <div class="flex my-2">
-                            <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#formModal" @click="onAdd()">Add</button>
-                            <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#formModal" @click="onEdit()">Edit</button>
-                            <button type="button" class="btn btn-primary mr-2" @click="onDelete()">delete</button>
+                        <div class="d-flex justify-content-end my-2">
+                            <button type="button" class="btn btn-primary mr-2" @click="importCSV()">Import CSV</button>
+                            <button type="button" class="btn btn-primary mr-0" style="width:80px" data-toggle="modal" data-target="#formModal" @click="onAdd()">Add</button>
+                            <input id="fileUpload" type="file" accept=".csv" hidden>
                         </div>
                         <table class="table table-bordered">
                             <thead class="thead-dark">
                                 <tr class="d-flex">
-                                    <th scope="col" class="col-1">#</th>
-                                    <th scope="col" class="col-2">Name</th>
-                                    <th scope="col" class="col-4">Description</th>
-                                    <th scope="col" class="col-1">Tag</th>
-                                    <th scope="col" class="col-4">File</th>
+                                    <th scope="col" class="col-1 d-flex justify-content-center align-items-center">#</th>
+                                    <th scope="col" class="col-2 d-flex justify-content-center align-items-center">Name</th>
+                                    <th scope="col" class="col-3 d-flex justify-content-center align-items-center">Description</th>
+                                    <th scope="col" class="col-1 d-flex justify-content-center align-items-center">Tag</th>
+                                    <th scope="col" class="col-3 d-flex justify-content-center align-items-center">File</th>
+                                    <th scope="col" class="col-2 d-flex justify-content-center align-items-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(item, index) in data" :key="item.id" class="d-flex" :class="{'table-active': index==selectedIndex}" @click="onRowClicked(index)" style="cursor:pointer">
                                     <th scope="row" class="col-1">{{index+1}}</th>
                                     <td class="col-2">{{item.name}}</td>
-                                    <td class="col-4">{{item.desc}}</td>
+                                    <td class="col-3">{{item.desc}}</td>
                                     <td class="col-1">{{item.tag}}</td>
-                                    <td class="col-4">{{item.file}}</td>
+                                    <td class="col-3"><a :href="getUploadFilePath(item.file)">{{item.file}}</a></td>
+                                    <td class="col-2 d-flex justify-content-center align-items-center">
+                                        <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#formModal" @click="onEdit(index)">Edit</button>
+                                        <button type="button" class="btn btn-primary mr-2" @click="onDelete(index)">delete</button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -116,7 +121,7 @@ export default {
                 if (err == null) {
                     Vue.set(this.data, this.selectedIndex, res.data)
                 }
-            })            
+            })           
         },
         deleteCompany() {
             if (this.selectedData == null) return
@@ -130,31 +135,37 @@ export default {
         },
         onRowClicked(index) {
             this.selectedIndex = index
-            this.selectedData = this.data[this.selectedIndex]
+            // this.selectedData = this.data[this.selectedIndex]
+        },
+        importCSV() {
+            document.getElementById("fileUpload").click()
         },
         onAdd() {
             this.editMode = 'add'
             this.selectedData = {};
             document.getElementById("company-file").value = ""
         },
-        onEdit() {
+        onEdit(index) {
             this.editMode = 'edit'
-            this.selectedData = _.clone(this.data[this.selectedIndex])
+            this.selectedData = _.clone(this.data[index])
             document.getElementById("company-file").value = ""
         },
-        onDelete() {
+        onDelete(index) {
+            this.selectedIndex = index
+            this.selectedData = this.data[this.selectedIndex]
             this.deleteCompany();
         },
         onFileChanged(event) {
-            console.log('---------fileChanged:', event.target.files[0])
             if (event.target.files && event.target.files.length> 0) {
-                this.selectedData.file = event.target.files[0].name
+                this.selectedData.fileInput = event.target.files[0]
             }
             else 
                 this.selectedData.file = ''
         },
+        getUploadFilePath(fileName) {
+            return api.getUploadFilePath(fileName)
+        },
         onOK() {
-            // this.selectedData.id = Math.floor(Math.random() * 1000)
             if (this.editMode == 'add') {
                 this.insertCompany();
             }

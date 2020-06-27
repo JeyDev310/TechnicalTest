@@ -25,5 +25,6 @@ Route::group(['middleware' => 'api',], function () {
         Route::post('/insertCompany', 'Api\V1\CompanyController@insert');
         Route::post('/updateCompany', 'Api\V1\CompanyController@update');
         Route::post('/deleteCompany', 'Api\V1\CompanyController@delete');
+        Route::post('/uploadFile', 'Api\V1\CustomController@uploadFile');
     });
 });

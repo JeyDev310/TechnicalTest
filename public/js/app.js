@@ -1999,6 +1999,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -2059,31 +2064,35 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     onRowClicked: function onRowClicked(index) {
-      this.selectedIndex = index;
-      this.selectedData = this.data[this.selectedIndex];
+      this.selectedIndex = index; // this.selectedData = this.data[this.selectedIndex]
+    },
+    importCSV: function importCSV() {
+      document.getElementById("fileUpload").click();
     },
     onAdd: function onAdd() {
       this.editMode = 'add';
       this.selectedData = {};
       document.getElementById("company-file").value = "";
     },
-    onEdit: function onEdit() {
+    onEdit: function onEdit(index) {
       this.editMode = 'edit';
-      this.selectedData = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.clone(this.data[this.selectedIndex]);
+      this.selectedData = lodash__WEBPACK_IMPORTED_MODULE_0___default.a.clone(this.data[index]);
       document.getElementById("company-file").value = "";
     },
-    onDelete: function onDelete() {
+    onDelete: function onDelete(index) {
+      this.selectedIndex = index;
+      this.selectedData = this.data[this.selectedIndex];
       this.deleteCompany();
     },
     onFileChanged: function onFileChanged(event) {
-      console.log('---------fileChanged:', event.target.files[0]);
-
       if (event.target.files && event.target.files.length > 0) {
-        this.selectedData.file = event.target.files[0].name;
+        this.selectedData.fileInput = event.target.files[0];
       } else this.selectedData.file = '';
     },
+    getUploadFilePath: function getUploadFilePath(fileName) {
+      return _services_api__WEBPACK_IMPORTED_MODULE_1__["default"].getUploadFilePath(fileName);
+    },
     onOK: function onOK() {
-      // this.selectedData.id = Math.floor(Math.random() * 1000)
       if (this.editMode == 'add') {
         this.insertCompany();
       } else {
@@ -38387,11 +38396,26 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
-            _c("div", { staticClass: "flex my-2" }, [
+            _c("div", { staticClass: "d-flex justify-content-end my-2" }, [
               _c(
                 "button",
                 {
                   staticClass: "btn btn-primary mr-2",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.importCSV()
+                    }
+                  }
+                },
+                [_vm._v("Import CSV")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary mr-0",
+                  staticStyle: { width: "80px" },
                   attrs: {
                     type: "button",
                     "data-toggle": "modal",
@@ -38406,37 +38430,14 @@ var render = function() {
                 [_vm._v("Add")]
               ),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary mr-2",
-                  attrs: {
-                    type: "button",
-                    "data-toggle": "modal",
-                    "data-target": "#formModal"
-                  },
-                  on: {
-                    click: function($event) {
-                      return _vm.onEdit()
-                    }
-                  }
-                },
-                [_vm._v("Edit")]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary mr-2",
-                  attrs: { type: "button" },
-                  on: {
-                    click: function($event) {
-                      return _vm.onDelete()
-                    }
-                  }
-                },
-                [_vm._v("delete")]
-              )
+              _c("input", {
+                attrs: {
+                  id: "fileUpload",
+                  type: "file",
+                  accept: ".csv",
+                  hidden: ""
+                }
+              })
             ]),
             _vm._v(" "),
             _c("table", { staticClass: "table table-bordered" }, [
@@ -38469,7 +38470,7 @@ var render = function() {
                         _vm._v(_vm._s(item.name))
                       ]),
                       _vm._v(" "),
-                      _c("td", { staticClass: "col-4" }, [
+                      _c("td", { staticClass: "col-3" }, [
                         _vm._v(_vm._s(item.desc))
                       ]),
                       _vm._v(" "),
@@ -38477,9 +38478,54 @@ var render = function() {
                         _vm._v(_vm._s(item.tag))
                       ]),
                       _vm._v(" "),
-                      _c("td", { staticClass: "col-4" }, [
-                        _vm._v(_vm._s(item.file))
-                      ])
+                      _c("td", { staticClass: "col-3" }, [
+                        _c(
+                          "a",
+                          { attrs: { href: _vm.getUploadFilePath(item.file) } },
+                          [_vm._v(_vm._s(item.file))]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "col-2 d-flex justify-content-center align-items-center"
+                        },
+                        [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary mr-2",
+                              attrs: {
+                                type: "button",
+                                "data-toggle": "modal",
+                                "data-target": "#formModal"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.onEdit(index)
+                                }
+                              }
+                            },
+                            [_vm._v("Edit")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary mr-2",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.onDelete(index)
+                                }
+                              }
+                            },
+                            [_vm._v("delete")]
+                          )
+                        ]
+                      )
                     ]
                   )
                 }),
@@ -38673,25 +38719,65 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", { staticClass: "thead-dark" }, [
       _c("tr", { staticClass: "d-flex" }, [
-        _c("th", { staticClass: "col-1", attrs: { scope: "col" } }, [
-          _vm._v("#")
-        ]),
+        _c(
+          "th",
+          {
+            staticClass:
+              "col-1 d-flex justify-content-center align-items-center",
+            attrs: { scope: "col" }
+          },
+          [_vm._v("#")]
+        ),
         _vm._v(" "),
-        _c("th", { staticClass: "col-2", attrs: { scope: "col" } }, [
-          _vm._v("Name")
-        ]),
+        _c(
+          "th",
+          {
+            staticClass:
+              "col-2 d-flex justify-content-center align-items-center",
+            attrs: { scope: "col" }
+          },
+          [_vm._v("Name")]
+        ),
         _vm._v(" "),
-        _c("th", { staticClass: "col-4", attrs: { scope: "col" } }, [
-          _vm._v("Description")
-        ]),
+        _c(
+          "th",
+          {
+            staticClass:
+              "col-3 d-flex justify-content-center align-items-center",
+            attrs: { scope: "col" }
+          },
+          [_vm._v("Description")]
+        ),
         _vm._v(" "),
-        _c("th", { staticClass: "col-1", attrs: { scope: "col" } }, [
-          _vm._v("Tag")
-        ]),
+        _c(
+          "th",
+          {
+            staticClass:
+              "col-1 d-flex justify-content-center align-items-center",
+            attrs: { scope: "col" }
+          },
+          [_vm._v("Tag")]
+        ),
         _vm._v(" "),
-        _c("th", { staticClass: "col-4", attrs: { scope: "col" } }, [
-          _vm._v("File")
-        ])
+        _c(
+          "th",
+          {
+            staticClass:
+              "col-3 d-flex justify-content-center align-items-center",
+            attrs: { scope: "col" }
+          },
+          [_vm._v("File")]
+        ),
+        _vm._v(" "),
+        _c(
+          "th",
+          {
+            staticClass:
+              "col-2 d-flex justify-content-center align-items-center",
+            attrs: { scope: "col" }
+          },
+          [_vm._v("Action")]
+        )
       ])
     ])
   },
@@ -52281,6 +52367,47 @@ var HttpApi = /*#__PURE__*/function () {
       }
 
       return baseApi;
+    }()
+  }, {
+    key: "fileApi",
+    value: function () {
+      var _fileApi = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(sub_url, method, file, cb) {
+        var token, fd;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                token = localStorage.token ? localStorage.token : null;
+                fd = new FormData();
+                fd.append('file', file);
+
+                try {
+                  axios.post(sub_url, fd, {
+                    headers: {
+                      "Authorization": token ? "Bearer " + token : null
+                    }
+                  }).then(function (res) {
+                    cb(null, res.data);
+                  }, function (error) {
+                    cb(error);
+                  });
+                } catch (error) {
+                  cb(error);
+                }
+
+              case 4:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }));
+
+      function fileApi(_x5, _x6, _x7, _x8) {
+        return _fileApi.apply(this, arguments);
+      }
+
+      return fileApi;
     }() // Auth
 
   }, {
@@ -52297,12 +52424,41 @@ var HttpApi = /*#__PURE__*/function () {
   }, {
     key: "insertCompany",
     value: function insertCompany(data, cb) {
-      this.baseApi('api/v1/insertCompany', 'POST', data, cb);
+      var _this = this;
+
+      if (data.fileInput) {
+        this.uploadFile(data.fileInput, function (err, res) {
+          if (err == null) {
+            data.file = res;
+
+            _this.baseApi('api/v1/insertCompany', 'POST', data, cb);
+          } else {
+            cb("file uploading eror");
+          }
+        });
+      } else {
+        data.file = '';
+        this.baseApi('api/v1/insertCompany', 'POST', data, cb);
+      }
     }
   }, {
     key: "updateCompany",
     value: function updateCompany(data, cb) {
-      this.baseApi('api/v1/updateCompany', 'POST', data, cb);
+      var _this2 = this;
+
+      if (data.fileInput) {
+        this.uploadFile(data.fileInput, function (err, res) {
+          if (err == null) {
+            data.file = res;
+
+            _this2.baseApi('api/v1/updateCompany', 'POST', data, cb);
+          } else {
+            cb("file uploading eror");
+          }
+        });
+      } else {
+        this.baseApi('api/v1/updateCompany', 'POST', data, cb);
+      }
     }
   }, {
     key: "deleteCompany",
@@ -52310,6 +52466,16 @@ var HttpApi = /*#__PURE__*/function () {
       this.baseApi('api/v1/deleteCompany', 'POST', {
         id: id
       }, cb);
+    }
+  }, {
+    key: "uploadFile",
+    value: function uploadFile(file, cb) {
+      this.fileApi('api/v1/uploadFile', 'POST', file, cb);
+    }
+  }, {
+    key: "getUploadFilePath",
+    value: function getUploadFilePath(fileName) {
+      return window.location.origin + '/upload/' + fileName;
     }
   }]);
 
