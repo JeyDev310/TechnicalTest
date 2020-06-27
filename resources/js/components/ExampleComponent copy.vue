@@ -4,6 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">Company Detail List</div>
+                    {{this.selectedData}}
                     <div class="card-body">
                         <div class="flex my-2">
                             <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#formModal" @click="onAdd()">Add</button>
@@ -14,18 +15,18 @@
                             <thead class="thead-dark">
                                 <tr class="d-flex">
                                     <th scope="col" class="col-1">#</th>
-                                    <th scope="col" class="col-2">Name</th>
+                                    <th scope="col" class="col-1">Name</th>
                                     <th scope="col" class="col-4">Description</th>
-                                    <th scope="col" class="col-1">Tag</th>
+                                    <th scope="col" class="col-2">Tag</th>
                                     <th scope="col" class="col-4">File</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(item, index) in data" :key="item.id" class="d-flex" :class="{'table-active': index==selectedIndex}" @click="onRowClicked(index)" style="cursor:pointer">
                                     <th scope="row" class="col-1">{{index+1}}</th>
-                                    <td class="col-2">{{item.name}}</td>
+                                    <td class="col-1">{{item.name}}</td>
                                     <td class="col-4">{{item.desc}}</td>
-                                    <td class="col-1">{{item.tag}}</td>
+                                    <td class="col-2">{{item.tag}}</td>
                                     <td class="col-4">{{item.file}}</td>
                                 </tr>
                             </tbody>
@@ -74,60 +75,33 @@
 </template>
 
 <script>
+import data from './data.json'
 import _ from 'lodash'
-import api from '../services/api'
+
 import { mapGetters, mapActions } from "vuex";
 
 export default {
     data () {
         return {
-        data:{},
+        data,
         selectedIndex: 0,
         selectedData: {},
         editMode: 'add'
         }
-    },
-    created() {
-    },
+    },        
     mounted() {
-        this.getCompanies();
+        console.log('Component mounted.')
+        this.selectedData = this.data[this.selectedIndex]
     },
     computed: {
-    },
-      watch: {
+        // ...mapGetters("CompaniesIndex", [
+        // "data",
+        // "total",
+        // "loading",
+        // "relationships"
+        // ])
     },
     methods: {
-        getCompanies() {
-            api.getCompanies((err, res) => {
-                if (err == null) {
-                    this.data = res
-                }
-            })            
-        },
-        insertCompany() {
-            api.insertCompany(this.selectedData, (err, res) => {
-                if (err == null) {
-                    this.data.push(res.data)
-                }
-            })
-        },
-        updateCompany() {
-            api.updateCompany(this.selectedData, (err, res) => {
-                if (err == null) {
-                    Vue.set(this.data, this.selectedIndex, res.data)
-                }
-            })            
-        },
-        deleteCompany() {
-            if (this.selectedData == null) return
-            api.deleteCompany(this.selectedData.id, (err, res) => {
-                if (err == null) {
-                    this.data.splice(this.selectedIndex, 1);
-                    this.selectedIndex = 0
-                    this.selectedData = this.data[this.selectedIndex]
-                }
-            })
-        },
         onRowClicked(index) {
             this.selectedIndex = index
             this.selectedData = this.data[this.selectedIndex]
@@ -136,14 +110,16 @@ export default {
             this.editMode = 'add'
             this.selectedData = {};
             document.getElementById("company-file").value = ""
+            console.log('--------onAdd')
         },
         onEdit() {
             this.editMode = 'edit'
             this.selectedData = _.clone(this.data[this.selectedIndex])
             document.getElementById("company-file").value = ""
+            console.log('--------onModify')
         },
         onDelete() {
-            this.deleteCompany();
+            this.data.splice(this.selectedIndex, 1);
         },
         onFileChanged(event) {
             console.log('---------fileChanged:', event.target.files[0])
@@ -154,13 +130,14 @@ export default {
                 this.selectedData.file = ''
         },
         onOK() {
-            // this.selectedData.id = Math.floor(Math.random() * 1000)
+            this.selectedData.id = Math.floor(Math.random() * 1000)
             if (this.editMode == 'add') {
-                this.insertCompany();
+                this.data.push(this.selectedData)
             }
             else {
-                this.updateCompany();
+                this.data[this.selectedIndex] = this.selectedData
             }
+            console.log('--------onOK:', this.data)
         }
     }
 }

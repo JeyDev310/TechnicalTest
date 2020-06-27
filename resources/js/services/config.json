@@ -1,0 +1,9 @@
+{
+    "dev": {
+        "apiServerURL": "",
+        "wsServerURL": ""
+    },
+
+    "prod": {
+    }
+}
