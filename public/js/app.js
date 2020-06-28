@@ -2089,6 +2089,7 @@ __webpack_require__.r(__webpack_exports__);
         this.selectedData.fileInput = event.target.files[0];
       } else this.selectedData.file = '';
     },
+    onImportCSV: function onImportCSV(event) {},
     getUploadFilePath: function getUploadFilePath(fileName) {
       return _services_api__WEBPACK_IMPORTED_MODULE_1__["default"].getUploadFilePath(fileName);
     },
@@ -38436,7 +38437,8 @@ var render = function() {
                   type: "file",
                   accept: ".csv",
                   hidden: ""
-                }
+                },
+                on: { change: _vm.onImportCSV }
               })
             ]),
             _vm._v(" "),
@@ -52369,9 +52371,9 @@ var HttpApi = /*#__PURE__*/function () {
       return baseApi;
     }()
   }, {
-    key: "fileApi",
+    key: "fileUploadApi",
     value: function () {
-      var _fileApi = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(sub_url, method, file, cb) {
+      var _fileUploadApi = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(sub_url, method, file, cb) {
         var token, fd;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
@@ -52403,11 +52405,11 @@ var HttpApi = /*#__PURE__*/function () {
         }, _callee3);
       }));
 
-      function fileApi(_x5, _x6, _x7, _x8) {
-        return _fileApi.apply(this, arguments);
+      function fileUploadApi(_x5, _x6, _x7, _x8) {
+        return _fileUploadApi.apply(this, arguments);
       }
 
-      return fileApi;
+      return fileUploadApi;
     }() // Auth
 
   }, {
@@ -52470,7 +52472,7 @@ var HttpApi = /*#__PURE__*/function () {
   }, {
     key: "uploadFile",
     value: function uploadFile(file, cb) {
-      this.fileApi('api/v1/uploadFile', 'POST', file, cb);
+      this.fileUploadApi('api/v1/uploadFile', 'POST', file, cb);
     }
   }, {
     key: "getUploadFilePath",
