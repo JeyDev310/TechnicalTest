@@ -8,7 +8,7 @@
                         <div class="d-flex justify-content-end my-2">
                             <button type="button" class="btn btn-primary mr-2" @click="importCSV()">Import CSV</button>
                             <button type="button" class="btn btn-primary mr-0" style="width:80px" data-toggle="modal" data-target="#formModal" @click="onAdd()">Add</button>
-                            <input id="fileUpload" type="file" accept=".csv" hidden>
+                            <input id="fileUpload" type="file" accept=".csv" hidden  @change="onImportCSV">
                         </div>
                         <table class="table table-bordered">
                             <thead class="thead-dark">
@@ -161,6 +161,9 @@ export default {
             }
             else 
                 this.selectedData.file = ''
+        },
+        onImportCSV(event) {
+            
         },
         getUploadFilePath(fileName) {
             return api.getUploadFilePath(fileName)

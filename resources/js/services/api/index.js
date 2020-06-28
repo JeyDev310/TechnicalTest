@@ -32,7 +32,7 @@ class HttpApi {
       cb(error);
     }
   }
-  async fileApi(sub_url, method, file, cb) {
+  async fileUploadApi(sub_url, method, file, cb) {
     const token = localStorage.token? localStorage.token : null
     let fd = new FormData()
     fd.append('file', file)
@@ -90,7 +90,7 @@ class HttpApi {
     this.baseApi('api/v1/deleteCompany', 'POST', {id}, cb)
   }
   uploadFile(file, cb) {    
-    this.fileApi('api/v1/uploadFile', 'POST', file, cb)
+    this.fileUploadApi('api/v1/uploadFile', 'POST', file, cb)
   }
   getUploadFilePath(fileName) {
     return window.location.origin + '/upload/' + fileName
