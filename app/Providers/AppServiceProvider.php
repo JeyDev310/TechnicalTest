@@ -24,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        ini_set('upload_max_filesize', '50M');
     }
 }

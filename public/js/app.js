@@ -2038,10 +2038,18 @@ __webpack_require__.r(__webpack_exports__);
     insertCompany: function insertCompany() {
       var _this2 = this;
 
+      if (this.selectedData.name == '' || this.selectedData.name == null) {
+        this.errorLabel = 'The company name should be exist.';
+        this.errorCode = 1;
+        this.clearError();
+        return;
+      }
+
       for (var i = 0; i < this.data.length; i++) {
         if (this.data[i].name == this.selectedData.name) {
           this.errorLabel = 'The company name is dupplicated.';
           this.errorCode = 1;
+          this.clearError();
           return;
         }
       }
@@ -2056,10 +2064,19 @@ __webpack_require__.r(__webpack_exports__);
           _this2.errorLabel = 'New company insert action is failed.';
           _this2.errorCode = 1;
         }
+
+        _this2.clearError();
       });
     },
     updateCompany: function updateCompany() {
       var _this3 = this;
+
+      if (this.selectedData.name == '' || this.selectedData.name == null) {
+        this.errorLabel = 'The company name should be exist.';
+        this.errorCode = 1;
+        this.clearError();
+        return;
+      }
 
       for (var i = 0; i < this.data.length; i++) {
         if (this.data[i].id == this.selectedData.id) continue;
@@ -2067,6 +2084,7 @@ __webpack_require__.r(__webpack_exports__);
         if (this.data[i].name == this.selectedData.name) {
           this.errorLabel = 'The company name is dupplicated.';
           this.errorCode = 1;
+          this.clearError();
           return;
         }
       }
@@ -2080,6 +2098,8 @@ __webpack_require__.r(__webpack_exports__);
           _this3.errorLabel = 'The company update action is failed.';
           _this3.errorCode = 1;
         }
+
+        _this3.clearError();
       });
     },
     deleteCompany: function deleteCompany() {
@@ -2098,10 +2118,12 @@ __webpack_require__.r(__webpack_exports__);
           _this4.errorLabel = 'The company delete action is failed.';
           _this4.errorCode = 1;
         }
+
+        _this4.clearError();
       });
     },
     onRowClicked: function onRowClicked(index) {
-      this.selectedIndex = index; // this.selectedData = this.data[this.selectedIndex]
+      this.selectedIndex = index;
     },
     importCSV: function importCSV() {
       document.getElementById("fileUpload").click();
@@ -2117,8 +2139,7 @@ __webpack_require__.r(__webpack_exports__);
       document.getElementById("company-file").value = "";
     },
     onDelete: function onDelete(index) {
-      this.selectedIndex = index; // console.log('---------------onDelete:', this.selectedIndex, this.selectedData)
-
+      this.selectedIndex = index;
       this.selectedData = this.data[this.selectedIndex];
       this.deleteCompany();
     },
@@ -2145,6 +2166,13 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.updateCompany();
       }
+    },
+    clearError: function clearError() {
+      var _this6 = this;
+
+      setTimeout(function () {
+        _this6.errorLabel = '';
+      }, 3000);
     }
   }
 });
@@ -38451,7 +38479,7 @@ var render = function() {
                   staticStyle: { "font-size": "14px", "font-weight": "900" },
                   style: { color: _vm.errorCode == 1 ? "red" : "green" }
                 },
-                [_vm._v("* " + _vm._s(_vm.errorLabel))]
+                [_vm._v(_vm._s(_vm.errorLabel))]
               ),
               _vm._v(" "),
               _c(

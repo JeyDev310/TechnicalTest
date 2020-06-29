@@ -6,7 +6,7 @@
                     <div class="card-header">Company Detail List</div>
                     <div class="card-body">
                         <div class="d-flex justify-content-end my-2">
-                            <div class="mr-auto" style="font-size: 14px; font-weight:900;" :style="{color: errorCode == 1 ? 'red': 'green'}" >* {{errorLabel}}</div>
+                            <div class="mr-auto" style="font-size: 14px; font-weight:900;" :style="{color: errorCode == 1 ? 'red': 'green'}" >{{errorLabel}}</div>
                             <button type="button" class="btn btn-primary mr-2" @click="importCSV()">Import CSV</button>
                             <button type="button" class="btn btn-primary mr-0" style="width:80px" data-toggle="modal" data-target="#formModal" @click="onAdd()">Add</button>
                             <input id="fileUpload" type="file" accept=".csv" hidden  @change="onImportCSV">
@@ -113,10 +113,17 @@ export default {
             })            
         },
         insertCompany() {
+            if (this.selectedData.name == '' || this.selectedData.name == null) {
+                this.errorLabel = 'The company name should be exist.'            
+                this.errorCode = 1
+                this.clearError();
+                return;
+            }
             for (let i=0; i<this.data.length; i++) {
                 if (this.data[i].name == this.selectedData.name) {
                     this.errorLabel = 'The company name is dupplicated.'
                     this.errorCode = 1
+                    this.clearError();
                     return;
                 }
             }
@@ -129,14 +136,22 @@ export default {
                     this.errorLabel = 'New company insert action is failed.'
                     this.errorCode = 1
                 }
+                this.clearError();
             })
         },
         updateCompany() {
+            if (this.selectedData.name == '' || this.selectedData.name == null) {
+                this.errorLabel = 'The company name should be exist.'            
+                this.errorCode = 1
+                this.clearError();
+                return;
+            }            
             for (let i=0; i<this.data.length; i++) {
                 if (this.data[i].id == this.selectedData.id) continue;
                 if (this.data[i].name == this.selectedData.name) {
                     this.errorLabel = 'The company name is dupplicated.'
                     this.errorCode = 1
+                    this.clearError();
                     return;
                 }
             }
@@ -149,6 +164,7 @@ export default {
                     this.errorLabel = 'The company update action is failed.'
                     this.errorCode = 1
                 }
+                this.clearError();
             })           
         },
         deleteCompany() {
@@ -165,11 +181,11 @@ export default {
                     this.errorLabel = 'The company delete action is failed.'
                     this.errorCode = 1
                 }
+                this.clearError();
             })
         },
         onRowClicked(index) {
             this.selectedIndex = index
-            // this.selectedData = this.data[this.selectedIndex]
         },
         importCSV() {
             document.getElementById("fileUpload").click()
@@ -186,7 +202,6 @@ export default {
         },
         onDelete(index) {
             this.selectedIndex = index
-            // console.log('---------------onDelete:', this.selectedIndex, this.selectedData)
             this.selectedData = this.data[this.selectedIndex]
             this.deleteCompany();
         },
@@ -214,6 +229,11 @@ export default {
             else {
                 this.updateCompany();
             }
+        },
+        clearError() {
+            setTimeout(()=> {
+            this.errorLabel = ''
+            }, 3000);
         }
     }
 }
