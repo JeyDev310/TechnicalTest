@@ -2089,7 +2089,15 @@ __webpack_require__.r(__webpack_exports__);
         this.selectedData.fileInput = event.target.files[0];
       } else this.selectedData.file = '';
     },
-    onImportCSV: function onImportCSV(event) {},
+    onImportCSV: function onImportCSV(event) {
+      var _this5 = this;
+
+      _services_api__WEBPACK_IMPORTED_MODULE_1__["default"].uploadCSV(event.target.files[0], function (err, res) {
+        if (err == null) {
+          _this5.getCompanies();
+        }
+      });
+    },
     getUploadFilePath: function getUploadFilePath(fileName) {
       return _services_api__WEBPACK_IMPORTED_MODULE_1__["default"].getUploadFilePath(fileName);
     },
@@ -38473,7 +38481,7 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "col-3" }, [
-                        _vm._v(_vm._s(item.desc))
+                        _vm._v(_vm._s(item.description))
                       ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "col-1" }, [
@@ -38613,13 +38621,13 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.selectedData.desc,
-                          expression: "selectedData.desc"
+                          value: _vm.selectedData.description,
+                          expression: "selectedData.description"
                         }
                       ],
                       staticClass: "form-control",
                       attrs: { id: "company-desc" },
-                      domProps: { value: _vm.selectedData.desc },
+                      domProps: { value: _vm.selectedData.description },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
@@ -38627,7 +38635,7 @@ var render = function() {
                           }
                           _vm.$set(
                             _vm.selectedData,
-                            "desc",
+                            "description",
                             $event.target.value
                           )
                         }
@@ -52479,6 +52487,34 @@ var HttpApi = /*#__PURE__*/function () {
     value: function getUploadFilePath(fileName) {
       return window.location.origin + '/upload/' + fileName;
     }
+  }, {
+    key: "uploadCSV",
+    value: function uploadCSV(file, cb) {
+      var fd = new FormData();
+      fd.append('file', file);
+
+      try {
+        // axios.post(config.serviceURL + 'api/company', fd, {
+        //   headers: {
+        //     "Content-Type":"multipart/form-data",
+        //     "Accept": "*/*"
+        //   }
+        // }).then(res => {
+        //   cb(null, res.data)
+        // }, (error) => { cb(error); })
+        axios({
+          method: "POST",
+          url: config.serviceURL + 'api/company',
+          data: fd
+        }).then(function (res) {
+          cb(null, res.data);
+        }, function (error) {
+          cb(error);
+        });
+      } catch (error) {
+        cb(error);
+      }
+    }
   }]);
 
   return HttpApi;
@@ -52497,7 +52533,7 @@ var HttpApi = /*#__PURE__*/function () {
 /*! exports provided: dev, prod, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"dev\":{\"apiServerURL\":\"\",\"wsServerURL\":\"\"},\"prod\":{}}");
+module.exports = JSON.parse("{\"dev\":{\"apiServerURL\":\"\",\"wsServerURL\":\"\",\"serviceURL\":\"http://localhost:3000/\"},\"prod\":{}}");
 
 /***/ }),
 
@@ -52802,8 +52838,8 @@ var debug = "development" !== 'production';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! G:\JobTests\TechnicalTest\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! G:\JobTests\TechnicalTest\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! E:\Job Test\TechnicalTest\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! E:\Job Test\TechnicalTest\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

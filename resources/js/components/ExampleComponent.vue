@@ -163,7 +163,11 @@ export default {
                 this.selectedData.file = ''
         },
         onImportCSV(event) {
-            
+            api.uploadCSV(event.target.files[0], (err, res) => {
+                if (err == null) {
+                    this.getCompanies();
+                }
+            })
         },
         getUploadFilePath(fileName) {
             return api.getUploadFilePath(fileName)

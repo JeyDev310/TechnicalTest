@@ -95,5 +95,28 @@ class HttpApi {
   getUploadFilePath(fileName) {
     return window.location.origin + '/upload/' + fileName
   }
+  uploadCSV(file, cb) {
+    let fd = new FormData()
+    fd.append('file', file)
+    try {
+      // axios.post(config.serviceURL + 'api/company', fd, {
+      //   headers: {
+      //     "Content-Type":"multipart/form-data",
+      //     "Accept": "*/*"
+      //   }
+      // }).then(res => {
+      //   cb(null, res.data)
+      // }, (error) => { cb(error); })
+      axios({
+        method:"POST",
+        url: config.serviceURL + 'api/company',
+        data: fd
+      }).then(res => {
+        cb(null, res.data)
+      }, (error) => { cb(error); })
+    } catch (error) {
+      cb(error)
+    }
+  }
 };
 export default (new HttpApi())

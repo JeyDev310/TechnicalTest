@@ -40,7 +40,7 @@ class CompanyController extends Controller
         $id = $request->get('id');
         $course = Company::find($id);
         $course->delete();
-        $result['result'] = 'OK';
+        $result['result'] = 'OK';   
         $result['message'] = 'Course is deleted successfully';
         return response()->json($result);
     }
