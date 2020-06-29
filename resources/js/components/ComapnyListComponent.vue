@@ -6,6 +6,7 @@
                     <div class="card-header">Company Detail List</div>
                     <div class="card-body">
                         <div class="d-flex justify-content-end my-2">
+                            <div class="mr-auto" style="font-size: 14px; font-weight:900;" :style="{color: errorCode == 1 ? 'red': 'green'}" >{{errorLabel}}</div>
                             <button type="button" class="btn btn-primary mr-2" @click="importCSV()">Import CSV</button>
                             <button type="button" class="btn btn-primary mr-0" style="width:80px" data-toggle="modal" data-target="#formModal" @click="onAdd()">Add</button>
                             <input id="fileUpload" type="file" accept=".csv" hidden  @change="onImportCSV">
@@ -89,7 +90,9 @@ export default {
         data:{},
         selectedIndex: 0,
         selectedData: {},
-        editMode: 'add'
+        editMode: 'add',
+        errorCode: '',
+        errorLabel: '',
         }
     },
     created() {
@@ -110,17 +113,58 @@ export default {
             })            
         },
         insertCompany() {
+            if (this.selectedData.name == '' || this.selectedData.name == null) {
+                this.errorLabel = 'The company name should be exist.'            
+                this.errorCode = 1
+                this.clearError();
+                return;
+            }
+            for (let i=0; i<this.data.length; i++) {
+                if (this.data[i].name == this.selectedData.name) {
+                    this.errorLabel = 'The company name is dupplicated.'
+                    this.errorCode = 1
+                    this.clearError();
+                    return;
+                }
+            }
             api.insertCompany(this.selectedData, (err, res) => {
                 if (err == null) {
                     this.data.push(res.data)
+                    this.errorLabel = res.message
+                    this.errorCode = 0
+                } else {
+                    this.errorLabel = 'New company insert action is failed.'
+                    this.errorCode = 1
                 }
+                this.clearError();
             })
         },
         updateCompany() {
+            if (this.selectedData.name == '' || this.selectedData.name == null) {
+                this.errorLabel = 'The company name should be exist.'            
+                this.errorCode = 1
+                this.clearError();
+                return;
+            }            
+            for (let i=0; i<this.data.length; i++) {
+                if (this.data[i].id == this.selectedData.id) continue;
+                if (this.data[i].name == this.selectedData.name) {
+                    this.errorLabel = 'The company name is dupplicated.'
+                    this.errorCode = 1
+                    this.clearError();
+                    return;
+                }
+            }
             api.updateCompany(this.selectedData, (err, res) => {
                 if (err == null) {
                     Vue.set(this.data, this.selectedIndex, res.data)
+                    this.errorLabel = res.message
+                    this.errorCode = 0
+                } else {
+                    this.errorLabel = 'The company update action is failed.'
+                    this.errorCode = 1
                 }
+                this.clearError();
             })           
         },
         deleteCompany() {
@@ -129,13 +173,19 @@ export default {
                 if (err == null) {
                     this.data.splice(this.selectedIndex, 1);
                     this.selectedIndex = 0
-                    this.selectedData = this.data[this.selectedIndex]
+                    if (this.data.length > 0 && this.data.length > this.selectedIndex)
+                        this.selectedData = this.data[this.selectedIndex]
+                    this.errorLabel = res.message
+                    this.errorCode = 0
+                } else {
+                    this.errorLabel = 'The company delete action is failed.'
+                    this.errorCode = 1
                 }
+                this.clearError();
             })
         },
         onRowClicked(index) {
             this.selectedIndex = index
-            // this.selectedData = this.data[this.selectedIndex]
         },
         importCSV() {
             document.getElementById("fileUpload").click()
@@ -179,6 +229,11 @@ export default {
             else {
                 this.updateCompany();
             }
+        },
+        clearError() {
+            setTimeout(()=> {
+            this.errorLabel = ''
+            }, 3000);
         }
     }
 }

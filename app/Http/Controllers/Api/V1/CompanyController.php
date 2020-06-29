@@ -22,6 +22,7 @@ class CompanyController extends Controller
         $company = Company::create($request->all());
         $result['result'] = 'OK';
         $result['data'] = $company;
+        $result['message'] = 'New company is inserted successfully';
         return response()->json($result);
     }
 
@@ -32,6 +33,7 @@ class CompanyController extends Controller
         $company->update($request->all());
         $result['result'] = 'OK';
         $result['data'] = $company;
+        $result['message'] = 'The company is updated successfully';
         return response()->json($result);
     }
 
@@ -41,7 +43,7 @@ class CompanyController extends Controller
         $course = Company::find($id);
         $course->delete();
         $result['result'] = 'OK';   
-        $result['message'] = 'Course is deleted successfully';
+        $result['message'] = 'The company is deleted successfully';
         return response()->json($result);
     }
 }

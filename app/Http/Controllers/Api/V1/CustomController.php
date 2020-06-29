@@ -19,14 +19,6 @@ class CustomController extends Controller
 
     public function videoUpload(Request $request) {
         $file = $request->file('file');
-        // $filename  = $file->getClientOriginalName();
-        // $pic   = date('His').'-'.$filename;
-        // $file->move('images', $pic);
-
-        // $video = file_get_contents($v);
-        // // Storage::disk('local')->put('name of the video', $video);
-        // $result['filename'] = $video;
-
         return response()->json($request->all());
     }
 }

@@ -43,7 +43,7 @@ window.purify = o => JSON.parse(JSON.stringify(o))
 window.Vue = require('vue');
 import store from './store/store'
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('company-list-component', require('./components/ComapnyListComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
