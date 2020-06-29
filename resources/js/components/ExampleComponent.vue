@@ -25,7 +25,7 @@
                                 <tr v-for="(item, index) in data" :key="item.id" class="d-flex" :class="{'table-active': index==selectedIndex}" @click="onRowClicked(index)" style="cursor:pointer">
                                     <th scope="row" class="col-1">{{index+1}}</th>
                                     <td class="col-2">{{item.name}}</td>
-                                    <td class="col-3">{{item.desc}}</td>
+                                    <td class="col-3">{{item.description}}</td>
                                     <td class="col-1">{{item.tag}}</td>
                                     <td class="col-3"><a :href="getUploadFilePath(item.file)">{{item.file}}</a></td>
                                     <td class="col-2 d-flex justify-content-center align-items-center">
@@ -56,7 +56,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="company-desc" class="col-form-label">Description:</label>
-                                <textarea class="form-control" id="company-desc" v-model="selectedData.desc"></textarea>
+                                <textarea class="form-control" id="company-desc" v-model="selectedData.description"></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="company-tag" class="col-form-label">Tag:</label>
