@@ -31,15 +31,13 @@ Download & Run Micro Service Docker Image
 ## Step 4
 
 Make an Example File - companies.csv
---------------------------------------------
-|             |                            |
-|  tCompany1  |   This is first company.   |
-|             |                            |
---------------------------------------------
-|             |                            |
-|  tCompany2  |   This is second company.  |
-|             |                            |
---------------------------------------------
+
+<table>
+<tbody>
+<tr> <td> tCompany1  </td>  <td> This is first company. </td>  </tr>
+<tr> <td> tCompany2  </td>  <td> This is second company. </td> </tr>
+</tbody>
+</table>
 
 ## Step5
 
